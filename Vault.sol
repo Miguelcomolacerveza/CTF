@@ -22,7 +22,6 @@ contract SelfDestruct {
 
 contract VaultTest is Test {
     Vault public vault;
-    SelfDestruct public selfdestructor;
     address public bob;
 
 
