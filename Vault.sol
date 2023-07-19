@@ -38,9 +38,6 @@ contract VaultTest is Test {
         bob = makeAddr("bob");
         vm.startPrank(bob);
         vm.deal(bob, 10 ether);
-    }
-
-    function testSendEtherFunction() public {
 
         bytes32 secret = vm.load(address(vault), bytes32(uint256(0)));
         vault.recoverFunds{value:0.0001 ether}(uint256(secret));
