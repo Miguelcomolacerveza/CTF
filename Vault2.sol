@@ -25,6 +25,7 @@ contract Vault2Test is Test {
 
     function setUp() public {
         vault = new Vault2{value: 0.0001 ether}();
+        selfdestructor = new SelfDestruct();
     }
     function testunlockVault() public {
 
@@ -37,7 +38,7 @@ contract Vault2Test is Test {
         require(sent1, "Fail ether transfer");    
 
         /// Destroy the contract
-        selfdestructor.close(vault));
+        selfdestructor.close(address(vault));
 
         /// We recover the funds 
         vault.recoverFunds();
