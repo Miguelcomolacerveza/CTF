@@ -11,14 +11,25 @@ interface CheatCodes {
         function load(address account, bytes32 slot) external returns (bytes32);
 }
 
+contract SelfDestruct {
+     receive() external payable {} // added for the contract to directly receive funds
+    
+     function close(address receiver) public {
+        selfdestruct(payable(receiver));
+     }
+   } 
+
 
 contract VaultTest is Test {
     Vault public vault;
+    SelfDestruct public selfdestructor;
     address public bob;
 
 
     function setUp() public {
         vault = new Vault{value: 0.0001 ether}();
+        selfdestructor = new SelfDestruct();
+        
     }
 
 
@@ -27,17 +38,13 @@ contract VaultTest is Test {
         bob = makeAddr("bob");
         vm.startPrank(bob);
         vm.deal(bob, 10 ether);
+    }
+
+    function testSendEtherFunction() public {
 
         bytes32 secret = vm.load(address(vault), bytes32(uint256(0)));
-
-        (bool sent2, ) = address(vault).call{value: 0.0001 ether}("");
-        require(sent2, "Fail ether transfer");
-        vault.recoverFunds(uint256(secret));
-    }
-
-    fallback() external payable {
+        vault.recoverFunds{value:0.0001 ether}(uint256(secret));
 
     }
-
-
 }
+
